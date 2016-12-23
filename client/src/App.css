@@ -1,0 +1,117 @@
+@keyframes App-logo-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.App-logo {
+    animation: App-logo-spin infinite 20s linear;
+    display: inline-block;
+    vertical-align: middle;
+    height: 40px;
+    margin-right: 15px;
+}
+
+.App-header {
+    background-color: #222;
+    padding: 30px;
+    color: white;
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.App-header h1 {
+    display: inline-block;
+    vertical-align: middle;
+    margin-top: 0px;
+    margin-bottom: -3px;
+}
+
+.App-header span {
+    font-size: 15px;
+    font-weight: normal;
+    opacity: 0.6;
+}
+
+.App-header a {
+    color: #00b5ad;
+}
+
+.App-repo {
+    position: absolute;
+    top: 30px;
+    right: 40px;
+}
+
+.App-sponsor {
+    position: absolute;
+    top: 52px;
+    right: 40px;
+}
+
+@media only screen and (max-width: 767px) {
+    .App-repo, .App-sponsor {
+        position: relative;
+        top: 5px;
+        left: 0;
+    }
+}
+
+.PackageSearch {
+    padding-bottom: 30px;
+}
+
+.SearchInputName, .SearchInputRange {
+    margin-right: 20px;
+}
+
+.SearchInputName input {
+    width: 220px;
+}
+
+.SearchInputRange input {
+    width: 120px;
+}
+
+@media only screen and (max-width: 767px) {
+    .PackageSearch .ui.button {
+        margin: 20px 0 0 0;
+    }
+}
+
+.ResultsContainer {
+    position: relative;
+    margin-top: 25px;
+    min-height: 300px;
+}
+
+/* Semantic UI overrides */
+.ui.header {
+    padding: 120px;
+}
+
+.ui.hidden.divider {
+    margin-bottom: 15px;
+}
+
+.ui.text.loader {
+    top: 220px;
+}
+
+.ui.input .remove.icon {
+    right: 10px;
+    top: 8px;
+    left: auto;
+    position: absolute;
+}
+
+code {
+    color: #969696;
+}
+
+.ui.input [placeholder]:focus::-webkit-input-placeholder {
+    color: rgba(0, 0, 0, .4);
+}
