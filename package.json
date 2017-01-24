@@ -12,7 +12,8 @@
         "client-build": "npm run build --prefix client/",
         "postinstall": "npm run client-install && npm run client-build",
         "start": "concurrently \"npm run server\" \"npm run client\"",
-        "prod-start": "concurrently \"npm run server\" \"npm run updater\""
+        "prod-start": "concurrently \"npm run server\" \"npm run updater\"",
+        "track": "node track-release.js"
     },
     "private": true,
     "author": "Vanja Cosic (https://twitter.com/vanjacosic)",
