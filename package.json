@@ -1,5 +1,5 @@
 {
-    "name": "module-versions",
+    "name": "dependency-land",
     "version": "1.0.0",
     "description": "Find the npm modules that depend on a specific module and semver range.",
     "main": "server.js",
@@ -38,10 +38,10 @@
     "devDependencies": {},
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/opbeat/module-versions.git"
+        "url": "git+https://github.com/opbeat/dependency-land.git"
     },
     "bugs": {
-        "url": "https://github.com/opbeat/module-versions/issues"
+        "url": "https://github.com/opbeat/dependency-land/issues"
     },
-    "homepage": "https://github.com/opbeat/module-versions#readme"
+    "homepage": "https://github.com/opbeat/dependency-land#readme"
 }

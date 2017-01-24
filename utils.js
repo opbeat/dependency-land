@@ -11,6 +11,6 @@ exports.isDevelopment = function() {
 exports.log = function() {
     let args = Array.prototype.slice.call(arguments);
     let date = new Date;
-    args.unshift(date + ' | [ModuleVersions] ');
+    args.unshift(date + ' | [Dependency.land] ');
     console.log.apply(console, args);
 }

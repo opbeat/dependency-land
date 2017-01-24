@@ -1,10 +1,10 @@
-# ModuleVersions
+# Dependency.land
 
 Find the npm modules that depend on a specific module and semver range.
 
 Think of it as a reverse dependency search; instead of finding dependencies, it finds dependents. 🔍
 
-Available at [module-versions.com](http://module-versions.com/). The project is created and hosted by [Opbeat](https://opbeat.com).
+Available at [dependency.land](http://dependency.land/). The project is created and hosted by [Opbeat](https://opbeat.com).
 
 **Note: This project is very much in beta, please share your feedback and contribute to the development.**
 
