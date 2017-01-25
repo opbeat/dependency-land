@@ -108,8 +108,8 @@
     position: absolute;
 }
 
-code {
-    color: #969696;
+a code {
+    color: #00b5ad;
 }
 
 .ui.input [placeholder]:focus::-webkit-input-placeholder {
