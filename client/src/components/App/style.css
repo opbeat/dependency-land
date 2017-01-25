@@ -40,6 +40,10 @@
     color: #00b5ad;
 }
 
+.App-header a h1 {
+    color: #fff;
+}
+
 .App-repo {
     position: absolute;
     top: 30px;
