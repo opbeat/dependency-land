@@ -3,7 +3,7 @@ function search(query, range, cb) {
     query = encodeURIComponent(query);
     range = encodeURIComponent(range);
 
-    return fetch(`api/query/${query}/${range}`, {
+    return fetch(`/api/query/${query}/${range}`, {
             accept: 'application/json',
         }).then(checkStatus)
         .then(parseJSON)

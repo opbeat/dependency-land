@@ -16,6 +16,16 @@ const PackageSearch = React.createClass({
             searchValueForRange: '',
         });
 
+        let package_param = this.props.params.package;
+        let version_param = this.props.params.version;
+
+        if(package_param) {
+            initialState['searchValueForName'] = package_param;
+        }
+        if(version_param) {
+            initialState['searchValueForRange'] = version_param;
+        }
+
         return initialState;
     },
 
@@ -36,34 +46,29 @@ const PackageSearch = React.createClass({
     },
 
     handleCancelForName: function (event) {
-        let reset = Object.assign({}, resetState, {
+        this.setState({
             searchValueForName: '',
-            searchValueForRange: '',
+            searchValueForRange: ''
+        }, () => {
+            this.changeRoute()
         });
-
-        this.setState(reset);
     },
 
     handleCancelForRange: function (event) {
-        let reset = Object.assign({}, resetState, {
-            searchValueForRange: '',
+        this.setState({
+            searchValueForRange: ''
+        }, () => {
+            this.changeRoute()
         });
-
-        this.setState(reset);
     },
 
-    onSubmit: function (event) {
-        event.preventDefault();
-
+    runSearch () {
         const {
             searchValueForName: name,
             searchValueForRange: range
         } = this.state
 
         if (name === '') {
-            this.setState({
-                errorMessage: 'Enter a package name'
-            });
             return false;
         }
 
@@ -78,23 +83,62 @@ const PackageSearch = React.createClass({
             isLoading: true,
         });
 
-        Client.search(name, range, (result) => {
-            if(result.error){
-                let errorState = Object.assign({}, resetState, {
-                    errorMessage: result.message,
-                });
+        if (name) {
+            Client.search(name, range, (result) => {
+                if(result.error){
+                    let errorState = Object.assign({}, resetState, {
+                        errorMessage: result.message,
+                    });
 
-                this.setState(errorState);
-            } else {
-                this.setState({
-                    total_packages_count: result.results.total_packages_count,
-                    unique_packages_count: result.results.unique_packages_count,
-                    unique_packages: result.results.unique_packages,
-                    query_name: result.query.name,
-                    isLoading: false,
-                });
-            }
-        });
+                    this.setState(errorState);
+                } else {
+                    this.setState({
+                        total_packages_count: result.results.total_packages_count,
+                        unique_packages_count: result.results.unique_packages_count,
+                        unique_packages: result.results.unique_packages,
+                        query_name: result.query.name,
+                        isLoading: false,
+                    });
+                }
+            });
+        }
+    },
+
+    componentWillMount() {
+        this.runSearch();
+    },
+
+    componentWillReceiveProps() {
+        this.runSearch();
+    },
+
+    changeRoute(name = this.state.searchValueForName, range = this.state.searchValueForRange) {
+        if (range === '*') {
+            range = null;
+        }
+
+        // Construct route
+        let route = `${name ? '/search/' : '/'}${name}${range ? '/' : ''}${range ? range : ''}`;
+
+        // Change route
+        this.props.router.push(route)
+    },
+
+    onSubmit: function (event) {
+        event.preventDefault();
+
+        const {
+            searchValueForName: name
+        } = this.state
+
+        if (name === '') {
+            this.setState({
+                errorMessage: 'Enter a package name'
+            });
+            return false;
+        }
+
+        this.changeRoute();
     },
     render: function () {
         const { searchValueForName, searchValueForRange } = this.state
