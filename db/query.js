@@ -21,47 +21,48 @@ module.exports = (name, range) => {
             range
         };
 
-        depDb.query(name, range, (err, pkgs) => {
-            if (err) {
-                reject(err);
+        var total = 0;
+        var pkgs = [];
+        var lastName, lastVersion, lastRange;
+        var results = depDb.query(name, range);
+
+        results.on('error', function (err) {
+            reject(err);
+        });
+
+        results.on('data', function (pkg) {
+            total++;
+
+            if (lastName && lastName !== pkg.name) {
+              flush();
+            } else if (lastVersion && semver.lt(pkg.version, lastVersion)) {
+              return;
             }
 
-            console.log('Found %d dependant package releases', pkgs.length)
+            lastName = pkg.name;
+            lastVersion = pkg.version;
+            lastRange = pkg.dependencies[name];
+        })
 
-            let unique = {};
-
-            pkgs.forEach((pkg) => {
-                if (!unique[pkg.name] || semver.gt(pkg.version, unique[pkg.name].version)) {
-                    unique[pkg.name] = {
-                        version: pkg.version,
-                        range: pkg.dependencies[name]
-                    }
-                }
-            });
+        results.on('end', function () {
+            flush();
+            console.log('query: %s@%s, results: %d, unique: %d', name, range, total, pkgs.length);
 
             response['results'] = {
-                total_packages_count: pkgs.length,
-                unique_packages_count: Object.keys(unique).length,
-                unique_packages: []
-            };
-
-            console.log('Filtered down to %d unique packages:', Object.keys(unique).length);
-
-            Object.keys(unique).forEach((pkgName) => {
-                let pkg = unique[pkgName];
-
-                console.log('- %s@%s (latest dependency: %s)', pkgName, pkg.version, pkg.range);
-
-                let packages = response.results.unique_packages;
-
-                packages.push({
-                    name: pkgName,
-                    version: pkg.version,
-                    range: pkg.range
-                });
-            });
+                total_packages_count: total,
+                unique_packages_count: pkgs.length,
+                unique_packages: pkgs
+            }
 
             resolve(response);
-        })
+        });
+
+        function flush () {
+            pkgs.push({
+                name: lastName,
+                version: lastVersion,
+                range: lastRange
+            })
+        }
     });
 }
