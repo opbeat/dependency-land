@@ -10,7 +10,7 @@ module.exports = (name, range) => {
 
         range = range || '*'
 
-        if (!name) throw new Error('missing required name');
+        if (!name) return reject(new Error('missing required name'));
 
         let response = {};
 

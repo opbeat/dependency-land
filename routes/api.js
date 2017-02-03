@@ -70,7 +70,7 @@ module.exports = exports = (server) => {
                         reply(
                             Boom.badImplementation('An error occurred.')
                         );
-                        throw error;
+                        opbeat.captureError(error);
                     });
             }
         }
