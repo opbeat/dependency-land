@@ -1,16 +1,27 @@
 module.exports.init = function(server) {
 
-    // Route for client app
+    // Route for api
+    require('./api.js')(server);
+
+
+    // Route for static client assets
     server.route({
         method: 'GET',
-        path: '/{param*}',
+        path: '/static/{param*}',
         handler: {
             directory: {
-                path: 'client/build/'
+                path: 'client/build/static'
             }
         }
     });
 
-    // Route for api
-    require('./api.js')(server);
+    // Route for client app
+    server.route({
+        method: 'GET',
+        path: '/{param*}',
+        handler: (request, reply) => {
+            reply.file('client/build/index.html');
+        }
+    });
+
 }
