@@ -22,6 +22,7 @@
     "bluebird": "^3.4.6",
     "boom": "^4.2.0",
     "concurrently": "^3.1.0",
+    "dependency-db": "^1.0.0",
     "dotenv": "^2.0.0",
     "good": "^7.0.2",
     "good-console": "^6.3.1",
