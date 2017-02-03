@@ -12,21 +12,21 @@ const SearchInfo = () => {
                 </div>
                 <div className="eight wide column">
                     <b>Try these examples:</b><br/>
-                    <Link to="/search/level/0.10.0">
+                    <a href="/level/0.10.0">
                         <code>level@0.10.0</code>
-                    </Link>
+                    </a>
                     &nbsp;or&nbsp;
-                    <Link to="/search/hypercore/^4.1.0">
+                    <a href="/hypercore/^4.1.0">
                         <code>hypercore@^4.1.0</code>
-                    </Link>
+                    </a>
                     <br/>
-                    <Link to="/search/standard">
+                    <a href="/standard">
                         <code>standard@*</code>
-                    </Link>
+                    </a>
                     &nbsp;or&nbsp;
-                    <Link to="/search/array-flatten/~2.1">
+                    <a href="/array-flatten/~2.1">
                         <code>array-flatten@~2.1</code>
-                    </Link>
+                    </a>
                 </div>
             </div>
         </div>

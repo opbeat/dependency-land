@@ -120,7 +120,7 @@ const PackageSearch = React.createClass({
         }
 
         // Construct route
-        let route = `${name ? '/search/' : '/'}${name}${range ? '/' : ''}${range ? range : ''}`;
+        let route = `${name ? '/' : '/'}${name}${range ? '/' : ''}${range ? range : ''}`;
 
         // Change route
         this.props.router.push(route)

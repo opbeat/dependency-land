@@ -7,10 +7,9 @@ import NotFound from './components/NotFound';
 
 const Routes = (props) => (
     <Router {...props}>
-        <Route path="/" component={App}>
-            <IndexRedirect to="/search" />
-            <Route path="/search" component={PackageSearch} />
-            <Route path="/search/:package(/:version)" component={PackageSearch} />
+        <Route component={App}>
+            <Route path="/" component={PackageSearch} />
+            <Route path="/:package(/:version)" component={PackageSearch} />
             <Route path="*" component={NotFound} />
         </Route>
     </Router>
