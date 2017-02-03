@@ -49,9 +49,6 @@ module.exports = (name, range) => {
 
             Object.keys(unique).forEach((pkgName) => {
                 let pkg = unique[pkgName];
-
-                console.log('- %s@%s (latest dependency: %s)', pkgName, pkg.version, pkg.range);
-
                 let packages = response.results.unique_packages;
 
                 packages.push({
