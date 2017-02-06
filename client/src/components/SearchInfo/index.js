@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router';
 
 const SearchInfo = () => {
 
@@ -11,21 +12,21 @@ const SearchInfo = () => {
                 </div>
                 <div className="eight wide column">
                     <b>Try these examples:</b><br/>
-                    <a href="/level/0.10.0">
+                    <Link to="/level/0.10.0">
                         <code>level@0.10.0</code>
-                    </a>
+                    </Link>
                     &nbsp;or&nbsp;
-                    <a href="/hypercore/^4.1.0">
+                    <Link to="/hypercore/^4.1.0">
                         <code>hypercore@^4.1.0</code>
-                    </a>
+                    </Link>
                     <br/>
-                    <a href="/standard">
+                    <Link to="/standard">
                         <code>standard@*</code>
-                    </a>
+                    </Link>
                     &nbsp;or&nbsp;
-                    <a href="/array-flatten/~2.1">
+                    <Link to="/array-flatten/~2.1">
                         <code>array-flatten@~2.1</code>
-                    </a>
+                    </Link>
                 </div>
             </div>
         </div>
