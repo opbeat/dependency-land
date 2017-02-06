@@ -1,6 +1,7 @@
 import React from 'react';
 import Client from './Client';
 import ReactDOM from 'react-dom';
+import classnames from 'classnames';
 
 import SearchInfo from '../SearchInfo';
 
@@ -170,6 +171,14 @@ const PackageSearch = React.createClass({
 
     render () {
         const { searchValueForName, searchValueForRange } = this.state
+        const showClearIconForName = searchValueForName.length > 0
+        const showClearIconForRange = searchValueForRange.length > 0
+        const searchInputNameClass = classnames('ui', 'labeled', 'input', 'SearchInputName', {
+          'icon': showClearIconForName
+        });
+        const searchInputRangeClass = classnames('ui', 'labeled', 'input', 'SearchInputRange', {
+          'icon': showClearIconForRange
+        });
 
         return (
             <div className='PackageSearch'>
@@ -179,7 +188,7 @@ const PackageSearch = React.createClass({
                     <form onSubmit={this.onSubmit} className="ui stackable grid">
                         <div className="eight wide column">
 
-                            <div className="ui labeled input SearchInputName">
+                            <div className={searchInputNameClass}>
                                 <div className="ui label">
                                 package
                                 </div>
@@ -193,7 +202,7 @@ const PackageSearch = React.createClass({
                                     autoFocus
                                     />
                                 {
-                                    searchValueForName.length > 0 ? (
+                                    showClearIconForName ? (
                                         <i
                                             className='remove icon link'
                                             onClick={ this.handleCancelForName }
@@ -204,7 +213,7 @@ const PackageSearch = React.createClass({
                         </div>
 
                         <div className="eight wide column">
-                            <div className="ui labeled input SearchInputRange">
+                            <div className={searchInputRangeClass}>
 
                                 <div className="ui label">
                                 range
@@ -218,7 +227,7 @@ const PackageSearch = React.createClass({
                                     ref="rangeInput"
                                     />
                                 {
-                                    searchValueForRange.length > 0 ? (
+                                    showClearIconForRange ? (
                                         <i
                                             className='remove icon link'
                                             onClick={ this.handleCancelForRange }
