@@ -137,13 +137,13 @@ const PackageSearch = React.createClass({
         let route = ``;
 
         if (name && name !== '' && name !== null) {
-            route = `/${name}`
+            route = `/${name}/`
         }
 
         if (name && range) {
-            route = `${route}/${range}`
+            route = `${route}${range}/`
         } else if (name) {
-            route = `${route}/*`
+            route = `${route}*/`
         }
 
         // Change route

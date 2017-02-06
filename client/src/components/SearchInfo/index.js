@@ -12,19 +12,19 @@ const SearchInfo = () => {
                 </div>
                 <div className="eight wide column">
                     <b>Try these examples:</b><br/>
-                    <Link to="/level/0.10.0">
+                    <Link to="/level/0.10.0/">
                         <code>level@0.10.0</code>
                     </Link>
                     &nbsp;or&nbsp;
-                    <Link to="/hypercore/^4.1.0">
+                    <Link to="/hypercore/^4.1.0/">
                         <code>hypercore@^4.1.0</code>
                     </Link>
                     <br/>
-                    <Link to="/standard">
+                    <Link to="/standard/">
                         <code>standard@*</code>
                     </Link>
                     &nbsp;or&nbsp;
-                    <Link to="/array-flatten/~2.1">
+                    <Link to="/array-flatten/~2.1/">
                         <code>array-flatten@~2.1</code>
                     </Link>
                 </div>
