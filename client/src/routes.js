@@ -5,9 +5,17 @@ import App from './components/App';
 import PackageSearch from './components/PackageSearch';
 import NotFound from './components/NotFound';
 
+function handleUpdate() {
+    // Basic GA tracking
+    if(window.ga){
+        window.ga('set', 'page', window.location.pathname);
+        window.ga('send', 'pageview');
+    }
+}
+
 const Routes = (props) => (
-    <Router {...props}>
         <Route component={App}>
+    <Router {...props} onUpdate={handleUpdate} >
             <Route path="/" component={PackageSearch} />
             <Route path="/:package(/:version)" component={PackageSearch} />
             <Route path="*" component={NotFound} />
