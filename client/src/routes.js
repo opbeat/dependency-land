@@ -13,23 +13,23 @@ function handleUpdate() {
     }
 }
 
-function forceTrailingSlash(nextState, replace) {
+function stripTrailingSlash(nextState, replace) {
     const path = nextState.location.pathname;
-    if (path.slice(-1) !== '/') {
+    if (path !== '/' && path.slice(-1) === '/') {
         replace({
             ...nextState.location,
-            pathname: path + '/'
+            pathname: path.replace(/\/$/, '')
         });
     }
 }
 
-function forceTrailingSlashOnChange(prevState, nextState, replace) {
-    forceTrailingSlash(nextState, replace);
+function stripTrailingSlashOnChange(prevState, nextState, replace) {
+    stripTrailingSlash(nextState, replace);
 }
 
 const Routes = (props) => (
     <Router {...props} onUpdate={handleUpdate} >
-        <Route component={App} onEnter={forceTrailingSlash} onChange={forceTrailingSlashOnChange}>
+        <Route component={App} onEnter={stripTrailingSlash} onChange={stripTrailingSlashOnChange}>
             <Route path="/" component={PackageSearch} />
             <Route path="/:package(/:version)" component={PackageSearch} />
             <Route path="*" component={NotFound} />
