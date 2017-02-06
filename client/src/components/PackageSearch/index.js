@@ -1,5 +1,6 @@
 import React from 'react';
 import Client from './Client';
+import ReactDOM from 'react-dom';
 
 import SearchInfo from '../SearchInfo';
 
@@ -12,23 +13,35 @@ const resetState = {
 };
 
 const PackageSearch = React.createClass({
-    getInitialState: function () {
-        let initialState = Object.assign({}, resetState, {
-            searchValueForName: '',
-            searchValueForRange: '',
-        });
+    getResetState (name, range) {
+        let state = Object.assign({}, resetState, {});
 
+        if(name) {
+            state['searchValueForName'] = name;
+        } else {
+            state['searchValueForName'] = '';
+        }
+
+        if(range) {
+            state['searchValueForRange'] = range;
+        } else {
+            if(name) {
+                state['searchValueForRange'] = '*';
+            } else {
+                state['searchValueForRange'] = '';
+            }
+        }
+
+        return state;
+    },
+
+    getInitialState: function () {
         let package_param = this.props.params.package;
         let version_param = this.props.params.version;
 
-        if(package_param) {
-            initialState['searchValueForName'] = package_param;
-        }
-        if(version_param) {
-            initialState['searchValueForRange'] = version_param;
-        }
+        let newState = this.getResetState(package_param, version_param);
 
-        return initialState;
+        return newState;
     },
 
     handleChangeForName: function (event) {
@@ -48,28 +61,23 @@ const PackageSearch = React.createClass({
     },
 
     handleCancelForName: function (event) {
-        this.setState({
-            searchValueForName: '',
-            searchValueForRange: ''
-        }, () => {
-            this.changeRoute()
+        let newState = this.getResetState();
+
+        this.setState(newState, () => {
+            this.changeRoute();
+            ReactDOM.findDOMNode(this.refs.nameInput).focus();
         });
     },
 
     handleCancelForRange: function (event) {
         this.setState({
-            searchValueForRange: ''
+            searchValueForRange: '',
         }, () => {
-            this.changeRoute()
+            ReactDOM.findDOMNode(this.refs.rangeInput).focus();
         });
     },
 
-    runSearch () {
-        const {
-            searchValueForName: name,
-            searchValueForRange: range
-        } = this.state
-
+    runSearch (name = this.state.searchValueForName, range = this.state.searchValueForRange) {
         if (name === '') {
             return false;
         }
@@ -85,62 +93,77 @@ const PackageSearch = React.createClass({
             isLoading: true,
         });
 
-        if (name) {
-            Client.search(name, range, (result) => {
-                if(result.error){
-                    let errorState = Object.assign({}, resetState, {
-                        errorMessage: result.message,
-                    });
+        Client.search(name, range, (result) => {
+            if(result.error){
+                let errorState = Object.assign({}, resetState, {
+                    errorMessage: result.message,
+                });
 
-                    this.setState(errorState);
-                } else {
-                    this.setState({
-                        total_packages_count: result.results.total_packages_count,
-                        unique_packages_count: result.results.unique_packages_count,
-                        unique_packages: result.results.unique_packages,
-                        query_name: result.query.name,
-                        isLoading: false,
-                    });
-                }
-            });
-        }
+                this.setState(errorState);
+            } else {
+                this.setState({
+                    total_packages_count: result.results.total_packages_count,
+                    unique_packages_count: result.results.unique_packages_count,
+                    unique_packages: result.results.unique_packages,
+                    query_name: result.query.name,
+                    isLoading: false,
+                });
+            }
+        });
+    },
+
+    componentWillReceiveProps(nextProps) {
+        // Run search if new params are different from current ones
+        let package_param = nextProps.params.package;
+        let version_param = nextProps.params.version;
+
+        let newState = this.getResetState(package_param, version_param);
+
+        this.setState(newState, () => {
+            this.runSearch(package_param, version_param);
+        });
     },
 
     componentWillMount() {
-        this.runSearch();
-    },
-
-    componentWillReceiveProps() {
-        this.runSearch();
+        // Run search when mounting component
+        // eg. when hitting a deep link
+        if(this.props.params.package || this.props.params.version) {
+            this.runSearch();
+        }
     },
 
     changeRoute(name = this.state.searchValueForName, range = this.state.searchValueForRange) {
-        if (range === '*') {
-            range = null;
+        // Construct route
+        let route = ``;
+
+        if(name && name !== '' && name !== null) {
+            route  = `/${name}`
         }
 
-        // Construct route
-        let route = `${name ? '/' : '/'}${name}${range ? '/' : ''}${range ? range : ''}`;
+        if(name && range) {
+            route = `${route}/${range}`
+        } else if (name){
+            route = `${route}/*`
+        }
 
         // Change route
-        this.props.router.push(route)
+        this.props.router.push(route);
     },
 
     onSubmit: function (event) {
         event.preventDefault();
 
-        const {
-            searchValueForName: name
-        } = this.state
-
-        if (name === '') {
+        if (this.state.searchValueForName === '') {
             this.setState({
                 errorMessage: 'Enter a package name'
             });
             return false;
         }
 
-        this.changeRoute();
+        this.changeRoute(
+            this.state.searchValueForName,
+            this.state.searchValueForRange
+        );
     },
     render: function () {
         const { searchValueForName, searchValueForRange } = this.state
@@ -163,6 +186,7 @@ const PackageSearch = React.createClass({
                                     value={searchValueForName}
                                     onChange={ this.handleChangeForName }
                                     placeholder='Eg. hypercore'
+                                    ref="nameInput"
                                     autoFocus
                                     />
                                 {
@@ -188,6 +212,7 @@ const PackageSearch = React.createClass({
                                     value={searchValueForRange}
                                     onChange={ this.handleChangeForRange }
                                     placeholder='Eg. ^1.2.3'
+                                    ref="rangeInput"
                                     />
                                 {
                                     searchValueForRange.length > 0 ? (
