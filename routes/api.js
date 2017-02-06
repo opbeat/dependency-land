@@ -22,7 +22,7 @@ module.exports = exports = (server) => {
         },
         handler: function(request, reply) {
             let versionRange;
-            let packageName = decodeURIComponent(request.params.name);
+            let packageName = decodeURIComponent(request.params.name).toLowerCase();
 
             if (request.params.range) {
                 versionRange = decodeURIComponent(request.params.range);

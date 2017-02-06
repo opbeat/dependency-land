@@ -163,8 +163,8 @@ const PackageSearch = React.createClass({
         }
 
         this.changeRoute(
-            this.state.searchValueForName,
-            this.state.searchValueForRange
+            this.state.searchValueForName.toLowerCase(),
+            this.state.searchValueForRange.toLowerCase()
         );
     },
 
