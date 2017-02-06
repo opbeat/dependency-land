@@ -136,6 +136,8 @@ const PackageSearch = React.createClass({
         // Construct route
         let route = ``;
 
+        name = encodeURIComponent(name);
+
         if (name && name !== '' && name !== null) {
             route = `/${name}/`
         }

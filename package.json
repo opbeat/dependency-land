@@ -34,8 +34,7 @@
     "mkdirp": "^0.5.1",
     "npm-dependency-db": "^1.6.1",
     "opbeat": "^4.1.0",
-    "semver": "^5.3.0",
-    "validate-npm-package-name": "^2.2.2"
+    "semver": "^5.3.0"
   },
   "devDependencies": {},
   "repository": {

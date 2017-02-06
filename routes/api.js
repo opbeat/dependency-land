@@ -2,7 +2,6 @@ const opbeat = require('opbeat');
 const Joi = require('joi');
 const Boom = require('boom');
 
-const validate = require('validate-npm-package-name');
 const semver = require('semver');
 
 const query = require('../db/query.js');
@@ -31,19 +30,10 @@ module.exports = exports = (server) => {
                 versionRange = '*';
             }
 
-            // Validate package name
-            let isPackageNameValid = validate(packageName);
-
             // Validate semver range
             let isVersionRangeValid = semver.validRange(versionRange);
 
-            if (isPackageNameValid.errors) {
-
-                reply(
-                    Boom.badData(isPackageNameValid.errors)
-                );
-
-            } else if (!isVersionRangeValid) {
+            if (!isVersionRangeValid) {
 
                 reply(
                     Boom.badData('Invalid semver range provided')
