@@ -13,19 +13,19 @@ const resetState = {
 };
 
 const PackageSearch = React.createClass({
-    getResetState (name, range) {
+    getResetState(name, range) {
         let state = Object.assign({}, resetState, {});
 
-        if(name) {
+        if (name) {
             state['searchValueForName'] = name;
         } else {
             state['searchValueForName'] = '';
         }
 
-        if(range) {
+        if (range) {
             state['searchValueForRange'] = range;
         } else {
-            if(name) {
+            if (name) {
                 state['searchValueForRange'] = '*';
             } else {
                 state['searchValueForRange'] = '';
@@ -35,7 +35,7 @@ const PackageSearch = React.createClass({
         return state;
     },
 
-    getInitialState: function () {
+    getInitialState() {
         let package_param = this.props.params.package;
         let version_param = this.props.params.version;
 
@@ -44,7 +44,7 @@ const PackageSearch = React.createClass({
         return newState;
     },
 
-    handleChangeForName: function (event) {
+    handleChangeForName(event) {
         const value = event.target.value;
 
         this.setState({
@@ -52,7 +52,7 @@ const PackageSearch = React.createClass({
         });
     },
 
-    handleChangeForRange: function (event) {
+    handleChangeForRange(event) {
         const value = event.target.value;
 
         this.setState({
@@ -60,7 +60,7 @@ const PackageSearch = React.createClass({
         });
     },
 
-    handleCancelForName: function (event) {
+    handleCancelForName(event) {
         let newState = this.getResetState();
 
         this.setState(newState, () => {
@@ -69,7 +69,7 @@ const PackageSearch = React.createClass({
         });
     },
 
-    handleCancelForRange: function (event) {
+    handleCancelForRange(event) {
         this.setState({
             searchValueForRange: '',
         }, () => {
@@ -77,7 +77,7 @@ const PackageSearch = React.createClass({
         });
     },
 
-    runSearch (name = this.state.searchValueForName, range = this.state.searchValueForRange) {
+    runSearch(name = this.state.searchValueForName, range = this.state.searchValueForRange) {
         if (name === '') {
             return false;
         }
@@ -94,7 +94,7 @@ const PackageSearch = React.createClass({
         });
 
         Client.search(name, range, (result) => {
-            if(result.error){
+            if (result.error) {
                 let errorState = Object.assign({}, resetState, {
                     errorMessage: result.message,
                 });
@@ -127,7 +127,7 @@ const PackageSearch = React.createClass({
     componentWillMount() {
         // Run search when mounting component
         // eg. when hitting a deep link
-        if(this.props.params.package || this.props.params.version) {
+        if (this.props.params.package || this.props.params.version) {
             this.runSearch();
         }
     },
@@ -136,13 +136,13 @@ const PackageSearch = React.createClass({
         // Construct route
         let route = ``;
 
-        if(name && name !== '' && name !== null) {
-            route  = `/${name}`
+        if (name && name !== '' && name !== null) {
+            route = `/${name}`
         }
 
-        if(name && range) {
+        if (name && range) {
             route = `${route}/${range}`
-        } else if (name){
+        } else if (name) {
             route = `${route}/*`
         }
 
@@ -150,7 +150,7 @@ const PackageSearch = React.createClass({
         this.props.router.push(route);
     },
 
-    onSubmit: function (event) {
+    onSubmit(event) {
         event.preventDefault();
 
         if (this.state.searchValueForName === '') {
@@ -165,7 +165,8 @@ const PackageSearch = React.createClass({
             this.state.searchValueForRange
         );
     },
-    render: function () {
+
+    render () {
         const { searchValueForName, searchValueForRange } = this.state
 
         return (
