@@ -9,6 +9,7 @@ if (utils.isDevelopment()) {
 
 const Hapi = require('hapi')
 const Good = require('good')
+const Inert = require('inert')
 
 const server = new Hapi.Server()
 
@@ -17,8 +18,7 @@ server.connection({
   port: ~~process.env.PORT || 3001
 })
 
-// Register hapi plugins
-server.register([{
+const configGood = {
   register: Good,
   options: {
     reporters: {
@@ -34,18 +34,21 @@ server.register([{
       }, 'stdout']
     }
   }
-}, require('inert')], (err) => {
-    // Handle plugin loading errors
+}
+
+// Register hapi plugins
+server.register([configGood, Inert], (err) => {
+  // Handle plugin loading errors
   if (err) {
     throw err
   }
 
-    // Load routes
+  // Load routes
   let routes = require('./routes')
   routes.init(server)
 
   server.start((err) => {
-      // Handle server errors
+    // Handle server errors
     if (err) {
       throw err
     }
