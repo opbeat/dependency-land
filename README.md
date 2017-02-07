@@ -31,6 +31,13 @@ Any feedback is appreciated and issues and pull requests are very welcome 🙌
 
 This repository uses [standard](https://github.com/feross/standard) to maintain code style and consistency, and to avoid style arguments. Please run `npm test` before submitting a PR.
 
+You can also make `standard` run a style check on the staged files automatically before each commit.
+Run this in the project folder:
+
+	ln -s ../../pre-commit.sh .git/hooks/pre-commit
+
+This will set up a git pre-commit hook that is linked to the version controlled one in the repository.
+
 ## Credits
 
 Thanks to [@watson](https://github.com/watson) and [@mafintosh](https://github.com/mafintosh) for creating the dependency-db modules and infrastructure. Thanks to the [dat project](https://datproject.org/) for hosting the hypercore service that dependency-db depends on. Thanks to [@terezka](https://github.com/terezka) for sanity checking the client code.
