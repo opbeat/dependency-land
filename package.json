@@ -22,7 +22,7 @@
     "bluebird": "^3.4.6",
     "boom": "^4.2.0",
     "concurrently": "^3.1.0",
-    "dependency-db": "^1.0.0",
+    "dependency-db": "^3.0.0",
     "dotenv": "^4.0.0",
     "good": "^7.0.2",
     "good-console": "^6.2.0",
@@ -32,7 +32,7 @@
     "joi": "^10.0.1",
     "level-party": "^3.0.4",
     "mkdirp": "^0.5.1",
-    "npm-dependency-db": "^1.6.1",
+    "npm-dependency-db": "^3.0.0",
     "opbeat": "^4.1.0",
     "semver": "^5.3.0"
   },
