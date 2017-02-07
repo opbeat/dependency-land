@@ -104,9 +104,9 @@ const PackageSearch = React.createClass({
         this.setState(errorState)
       } else {
         this.setState({
-          totalPackagesCount: result.results.totalPackagesCount,
-          uniquePackagesCount: result.results.uniquePackagesCount,
-          uniquePackages: result.results.uniquePackages,
+          totalPackagesCount: result.results.total_packages_count,
+          uniquePackagesCount: result.results.unique_packages_count,
+          uniquePackages: result.results.unique_packages,
           queryName: result.query.name,
           isLoading: false
         })
