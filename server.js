@@ -1,56 +1,60 @@
-const opbeat = require('opbeat').start();
-global.utils = require('./utils.js');
+/* global utils */
+/* eslint no-unused-vars: ["error", { "varsIgnorePattern": "opbeat" }] */
+const opbeat = require('opbeat').start()
+global.utils = require('./utils.js')
 
 if (utils.isDevelopment()) {
-    require('dotenv').config();
+  require('dotenv').config()
 }
 
-const Hapi = require('hapi');
-const Good = require('good');
+const Hapi = require('hapi')
+const Good = require('good')
+const Inert = require('inert')
 
-const server = new Hapi.Server();
+const server = new Hapi.Server()
 
 server.connection({
-    host: '0.0.0.0',
-    port: ~~process.env.PORT || 3001
-});
+  host: '0.0.0.0',
+  port: ~~process.env.PORT || 3001
+})
+
+const configGood = {
+  register: Good,
+  options: {
+    reporters: {
+      console: [{
+        module: 'good-squeeze',
+        name: 'Squeeze',
+        args: [{
+          response: '*',
+          log: '*'
+        }]
+      }, {
+        module: 'good-console'
+      }, 'stdout']
+    }
+  }
+}
 
 // Register hapi plugins
-server.register([{
-    register: Good,
-    options: {
-        reporters: {
-            console: [{
-                module: 'good-squeeze',
-                name: 'Squeeze',
-                args: [{
-                    response: '*',
-                    log: '*'
-                }]
-            }, {
-                module: 'good-console'
-            }, 'stdout']
-        }
-    }
-}, require('inert')], (err) => {
+server.register([configGood, Inert], (err) => {
+  // Handle plugin loading errors
+  if (err) {
+    throw err
+  }
 
-    // Handle plugin loading errors
+  // Load routes
+  let routes = require('./routes')
+  routes.init(server)
+
+  server.start((err) => {
+    // Handle server errors
     if (err) {
-        throw err;
+      throw err
     }
 
-    // Load routes
-    let routes = require('./routes');
-    routes.init(server);
+    utils.log(`Server running at: ${server.info.uri}`)
+  })
+})
 
-    server.start((err) => {
-        // Handle server errors
-        if (err) {
-            throw err;
-        }
-
-        utils.log(`Server running at: ${server.info.uri}`);
-    });
-});
-
-module.exports = server;
+module.exports = server

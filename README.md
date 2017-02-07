@@ -8,6 +8,8 @@ Available at [dependency.land](http://dependency.land/). The project is created 
 
 **Note: This project is very much in beta, please share your feedback and contribute to the development.**
 
+[![Standard - JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](http://standardjs.com/)
+
 ## Development
 
 This project contains a simple client website and a small server with a REST API. Once deployed it runs the server and a background service that keeps the local data set up-to-date continously.
@@ -22,6 +24,19 @@ The client is based on [create-react-app](https://github.com/facebookincubator/c
 
 		npm start
 
+
+## Contributing
+
+Any feedback is appreciated and issues and pull requests are very welcome 🙌
+
+This repository uses [standard](https://github.com/feross/standard) to maintain code style and consistency, and to avoid style arguments. Please run `npm test` before submitting a PR.
+
+You can also make `standard` run a style check on the staged files automatically before each commit.
+Run this in the project folder:
+
+	ln -s ../../pre-commit.sh .git/hooks/pre-commit
+
+This will set up a git pre-commit hook that is linked to the version controlled one in the repository.
 
 ## Credits
 
