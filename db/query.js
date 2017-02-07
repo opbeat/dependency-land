@@ -9,7 +9,7 @@ module.exports = (name, range) => {
   return new Promise((resolve, reject) => {
     range = range || '*'
 
-    if (!name) throw new Error('missing required name')
+    if (!name) return reject(new Error('missing required name'))
 
     let response = {}
 

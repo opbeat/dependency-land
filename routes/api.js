@@ -65,7 +65,7 @@ const apiHandler = (request, reply) => {
         reply(
           Boom.badImplementation('An error occurred.')
         )
-        throw error
+        opbeat.captureError(error)
       })
   }
 }
