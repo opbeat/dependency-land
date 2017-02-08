@@ -6,7 +6,9 @@ const sub = require('subleveldown')
 const db = require('./db.js')
 const depDb = new DepDb(sub(db.level(), 'depdb'))
 
-module.exports = (name, range) => {
+module.exports = (name, range, opts) => {
+  if (!opts) opts = {}
+
   return new Promise((resolve, reject) => {
     range = range || '*'
 
@@ -24,7 +26,7 @@ module.exports = (name, range) => {
     var total = 0
     var pkgs = []
     var lastName, lastVersion, lastRange
-    var results = depDb.query(name, range)
+    var results = depDb.query(name, range, opts)
 
     results.on('error', function (err) {
       reject(err)
@@ -41,7 +43,7 @@ module.exports = (name, range) => {
 
       lastName = pkg.name
       lastVersion = pkg.version
-      lastRange = pkg.dependencies[name]
+      lastRange = opts.devDependencies ? pkg.devDependencies[name] : pkg.dependencies[name]
     })
 
     results.on('end', function () {

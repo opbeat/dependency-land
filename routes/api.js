@@ -51,7 +51,7 @@ const apiHandler = (request, reply) => {
     }
 
     // Run db query
-    query(packageName, versionRange)
+    query(packageName, versionRange, {devDependencies: request.query.dev})
       .then((response) => {
         if (trace) {
           trace.end()
