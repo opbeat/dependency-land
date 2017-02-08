@@ -1,9 +1,10 @@
 const Promise = require('bluebird')
 const semver = require('semver')
 const DepDb = require('dependency-db')
+const sub = require('subleveldown')
 
 const db = require('./db.js')
-const depDb = new DepDb(db.level())
+const depDb = new DepDb(sub(db.level(), 'depdb'))
 
 module.exports = (name, range) => {
   return new Promise((resolve, reject) => {
