@@ -1,4 +1,4 @@
-module.exports.init = function (server) {
+exports.init = function (server) {
   // Route for api
   require('./api.js')(server)
 

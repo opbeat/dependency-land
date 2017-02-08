@@ -18,7 +18,7 @@ const dbPath = path.join(pathPrefix, '.npm-dependency-db')
 
 mkdirp.sync(dbPath)
 
-module.exports.level = () => {
+exports.level = () => {
   const db = level(dbPath)
 
   utils.log(`Database loaded from: ${db.location}`)
