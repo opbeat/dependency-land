@@ -58,6 +58,7 @@ module.exports = (name, range) => {
     })
 
     function flush () {
+      if (!lastName) return
       pkgs.push({
         name: lastName,
         version: lastVersion,
