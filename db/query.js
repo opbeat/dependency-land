@@ -52,13 +52,10 @@ module.exports = (name, range, opts) => {
   }
 
   function flush () {
+    if (!headFlushed) flushHead()
     if (!lastName) return
 
-    let prefix = ','
-    if (resultCount === 0) {
-      flushHead()
-      prefix = ''
-    }
+    let prefix = resultCount > 0 ? ',' : ''
 
     json.write(prefix + JSON.stringify({
       name: lastName,
