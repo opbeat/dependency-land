@@ -9,18 +9,21 @@ function search (query, range, dev, cb) {
   }).then(checkStatus)
     .then(parseJSON)
     .then(cb)
+    .catch(function (err) {
+      cb({
+        error: true,
+        message: err.message
+      })
+    })
 }
 
 function checkStatus (response) {
-  // if (response.status >= 200 && response.status < 300) {
-  //     return response
-  // } else {
-  //     const error = new Error(`HTTP Error ${response.statusText}`)
-  //     error.status = response.statusText
-  //     error.response = response
-  //     console.log(error) // eslint-disable-line no-console
-  //     throw error
-  // }
+  let ctHeader = response.headers.get('content-type')
+
+  if (ctHeader && ctHeader.indexOf('application/json') !== 0) {
+    throw new Error('Unexpected error occurred')
+  }
+
   return response
 }
 
