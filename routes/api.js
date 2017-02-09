@@ -54,7 +54,6 @@ const apiHandler = (request, reply) => {
     var stream = query(packageName, versionRange, {devDependencies: request.query.dev})
 
     eos(stream, function (err) {
-      console.log(err)
       if (trace) trace.end()
       if (err) opbeat.captureError(err)
     })
