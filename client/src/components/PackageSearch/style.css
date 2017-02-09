@@ -1,0 +1,66 @@
+.PackageSearch {
+    padding-bottom: 30px;
+}
+
+.SearchInputName, .SearchInputRange {
+    margin-right: 25px;
+}
+
+.SearchInputName input {
+    width: 300px;
+}
+
+.SearchInputRange input {
+    width: 125px;
+}
+
+
+@media only screen and (max-width: 767px) {
+    .PackageSearch .ui.button {
+        margin: 20px 0 0 0;
+    }
+}
+
+.ResultsContainer {
+    position: relative;
+    margin-top: 25px;
+    min-height: 300px;
+}
+
+.ui.text.loader {
+    top: 220px;
+}
+
+.ui.input .remove.icon {
+    right: 10px;
+    top: 8px;
+    left: auto;
+    position: absolute;
+}
+
+.ui.input [placeholder]:focus::-webkit-input-placeholder {
+    color: rgba(0, 0, 0, .4);
+}
+
+.SearchForm {
+    line-height: 1.5;
+    font-size: 16px;
+}
+
+.SearchForm .checkbox {
+    margin-right: 25px;
+    top: 6px;
+}
+
+
+.SearchForm .ui.toggle.checkbox label:after {
+    background: linear-gradient(transparent,rgba(0,0,0,.05)) #5d5d5d;
+}
+
+.SearchForm .ui.toggle.checkbox label:before {
+    background-color: rgba(0,0,0,.15);
+}
+
+.SearchForm .ui.large.toggle.checkbox input:checked~label:before {
+    background-color: #00b5ad!important;
+}

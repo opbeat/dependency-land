@@ -64,34 +64,6 @@
     }
 }
 
-.PackageSearch {
-    padding-bottom: 30px;
-}
-
-.SearchInputName, .SearchInputRange {
-    margin-right: 20px;
-}
-
-.SearchInputName input {
-    width: 220px;
-}
-
-.SearchInputRange input {
-    width: 120px;
-}
-
-@media only screen and (max-width: 767px) {
-    .PackageSearch .ui.button {
-        margin: 20px 0 0 0;
-    }
-}
-
-.ResultsContainer {
-    position: relative;
-    margin-top: 25px;
-    min-height: 300px;
-}
-
 /* Semantic UI overrides */
 .ui.header {
     padding: 120px;
@@ -99,23 +71,4 @@
 
 .ui.hidden.divider {
     margin-bottom: 15px;
-}
-
-.ui.text.loader {
-    top: 220px;
-}
-
-.ui.input .remove.icon {
-    right: 10px;
-    top: 8px;
-    left: auto;
-    position: absolute;
-}
-
-a code {
-    color: #00b5ad;
-}
-
-.ui.input [placeholder]:focus::-webkit-input-placeholder {
-    color: rgba(0, 0, 0, .4);
 }
