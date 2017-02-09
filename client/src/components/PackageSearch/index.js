@@ -297,7 +297,12 @@ const PackageSearch = React.createClass({
         <div className='ui container ResultsContainer'>
           { this.state.isLoading ? (
             <div className='ui active inverted dimmer'>
-              <div className='ui medium text loader'>Loading</div>
+              <div className='ui medium text loader'>
+                <b>Loading</b>
+                <p>
+                  Searching for popular modules may take a while.
+                </p>
+              </div>
             </div>
           ) : null}
           <SearchResults {...this.state} />

@@ -31,6 +31,17 @@
     top: 220px;
 }
 
+.ui.text.loader b {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 1.3em;
+}
+
+.ui.text.loader p {
+    margin-top: 20px;
+    font-style: italic;
+}
+
 .ui.input .remove.icon {
     right: 10px;
     top: 8px;
