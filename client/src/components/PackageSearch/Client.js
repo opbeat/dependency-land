@@ -1,10 +1,10 @@
 import fetch from 'isomorphic-fetch'
 
-function search (query, range, cb) {
+function search (query, range, dev, cb) {
   query = encodeURIComponent(query)
   range = encodeURIComponent(range)
 
-  return fetch(`/api/query/${query}${range ? '/' : ''}${range}`, {
+  return fetch(`/api/query/${query}${range ? '/' : ''}${range}${dev ? '?dev=1' : ''}`, {
     accept: 'application/json'
   }).then(checkStatus)
     .then(parseJSON)

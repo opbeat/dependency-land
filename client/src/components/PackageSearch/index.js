@@ -6,6 +6,8 @@ import classnames from 'classnames'
 
 import SearchInfo from '../SearchInfo'
 
+import './style.css'
+
 const resetState = {
   totalPackagesCount: null,
   uniquePackagesCount: null,
@@ -15,7 +17,7 @@ const resetState = {
 }
 
 const PackageSearch = React.createClass({
-  getResetState (name, range) {
+  getResetState (name, range, dev) {
     let state = Object.assign({}, resetState, {})
 
     if (name) {
@@ -34,14 +36,23 @@ const PackageSearch = React.createClass({
       }
     }
 
+    dev = Boolean(dev)
+
+    if (dev) {
+      state['searchDev'] = true
+    } else {
+      state['searchDev'] = false
+    }
+
     return state
   },
 
   getInitialState () {
     let packageParam = this.props.params.package
     let versionParam = this.props.params.version
+    let devParam = this.props.location.query.dev
 
-    let newState = this.getResetState(packageParam, versionParam)
+    let newState = this.getResetState(packageParam, versionParam, devParam)
 
     return newState
   },
@@ -79,7 +90,17 @@ const PackageSearch = React.createClass({
     })
   },
 
-  runSearch (name = this.state.searchValueForName, range = this.state.searchValueForRange) {
+  handleCheckboxChange (event) {
+    this.setState({
+      searchDev: event.target.checked
+    })
+  },
+
+  runSearch (
+    name = this.state.searchValueForName,
+    range = this.state.searchValueForRange,
+    dev = this.state.searchDev
+  ) {
     if (name === '') {
       return false
     }
@@ -90,12 +111,14 @@ const PackageSearch = React.createClass({
       })
     }
 
+    dev = Boolean(dev)
+
     this.setState({
       errorMessage: '',
       isLoading: true
     })
 
-    Client.search(name, range, (result) => {
+    Client.search(name, range, dev, (result) => {
       if (result.error) {
         let errorState = Object.assign({}, resetState, {
           errorMessage: result.message
@@ -118,11 +141,12 @@ const PackageSearch = React.createClass({
     // Run search if new params are different from current ones
     let packageParam = nextProps.params.package
     let versionParam = nextProps.params.version
+    let devParam = nextProps.location.query.dev
 
-    let newState = this.getResetState(packageParam, versionParam)
+    let newState = this.getResetState(packageParam, versionParam, devParam)
 
     this.setState(newState, () => {
-      this.runSearch(packageParam, versionParam)
+      this.runSearch(packageParam, versionParam, devParam)
     })
   },
 
@@ -134,7 +158,11 @@ const PackageSearch = React.createClass({
     }
   },
 
-  changeRoute (name = this.state.searchValueForName, range = this.state.searchValueForRange) {
+  changeRoute (
+      name = this.state.searchValueForName,
+      range = this.state.searchValueForRange,
+      dev = this.state.searchDev
+  ) {
     // Construct route
     let route = ``
 
@@ -148,6 +176,10 @@ const PackageSearch = React.createClass({
       route = `${route}/${range}`
     } else if (name) {
       route = `${route}/*`
+    }
+
+    if (dev) {
+      route = `${route}?dev=1`
     }
 
     // Change route
@@ -166,7 +198,8 @@ const PackageSearch = React.createClass({
 
     this.changeRoute(
       this.state.searchValueForName,
-      this.state.searchValueForRange
+      this.state.searchValueForRange,
+      this.state.searchDev
     )
   },
 
@@ -184,11 +217,11 @@ const PackageSearch = React.createClass({
     return (
       <div className='PackageSearch'>
         <SearchInfo />
-        <div className='ui hidden divider' />
-        <div className='ui text container'>
-          <form onSubmit={this.onSubmit} className='ui stackable grid'>
 
-            <div className='eight wide column'>
+        <div className='ui two column grid SearchForm'>
+          <form onSubmit={this.onSubmit} className='ui four column centered row'>
+
+            <div className='ui six wide column'>
               <div className={searchInputNameClass}>
                 <div className='ui label'>
                   package
@@ -213,7 +246,7 @@ const PackageSearch = React.createClass({
               </div>
             </div>
 
-            <div className='eight wide column'>
+            <div className='ui six wide column'>
               <div className={searchInputRangeClass}>
                 <div className='ui label'>
                 range
@@ -236,6 +269,19 @@ const PackageSearch = React.createClass({
                 }
               </div>
 
+              <div
+                className='ui fitted large toggle checkbox'
+                data-tooltip='Search for devDependents'
+                data-inverted=''
+              >
+                <input
+                  type='checkbox'
+                  checked={this.state.searchDev}
+                  onChange={this.handleCheckboxChange}
+                />
+                <label />
+              </div>
+
               <button
                 type='submit'
                 className='ui column large teal button'
@@ -246,6 +292,7 @@ const PackageSearch = React.createClass({
 
           </form>
         </div>
+
         <div className='ui hidden divider' />
         <div className='ui container ResultsContainer'>
           { this.state.isLoading ? (
