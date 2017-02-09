@@ -25,7 +25,7 @@ module.exports = (name, range, opts) => {
 
   console.log('Looking up %s %s dependants...', name, range)
 
-  results.on('error', flushError)
+  results.once('error', flushError)
   results.on('data', onData)
   results.on('end', onEnd)
 
