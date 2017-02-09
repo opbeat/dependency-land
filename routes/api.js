@@ -1,7 +1,7 @@
 const opbeat = require('opbeat')
 const Joi = require('joi')
 const Boom = require('boom')
-
+const eos = require('end-of-stream')
 const semver = require('semver')
 
 const query = require('../db/query.js')
@@ -51,21 +51,15 @@ const apiHandler = (request, reply) => {
     }
 
     // Run db query
-    query(packageName, versionRange, {devDependencies: request.query.dev})
-      .then((response) => {
-        if (trace) {
-          trace.end()
-        }
-        reply(response)
-      })
-      .catch((error) => {
-        if (trace) {
-          trace.end()
-        }
-        reply(
-          Boom.badImplementation('An error occurred.')
-        )
-        opbeat.captureError(error)
-      })
+    var stream = query(packageName, versionRange, {devDependencies: request.query.dev})
+
+    eos(stream, function (err) {
+      console.log(err)
+      if (trace) trace.end()
+      if (err) opbeat.captureError(err)
+    })
+
+    var res = reply(stream)
+    res.header('Content-Type', 'application/json')
   }
 }
