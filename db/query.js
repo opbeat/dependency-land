@@ -1,4 +1,3 @@
-const semver = require('semver')
 const DepDb = require('dependency-db')
 const sub = require('subleveldown')
 const PassThrough = require('readable-stream').PassThrough
@@ -15,7 +14,6 @@ module.exports = (name, range, opts) => {
   let json = new PassThrough()
   let total = 0
   let headFlushed = false
-  let lastName, lastVersion, lastRange
 
   if (!name) {
     flushError(new Error('missing required name'))
@@ -31,36 +29,21 @@ module.exports = (name, range, opts) => {
   return json
 
   function onData (pkg) {
-    if (lastName && lastName !== pkg.name) {
-      flush()
-    } else if (lastVersion && semver.lt(pkg.version, lastVersion)) {
-      return
-    }
+    if (!headFlushed) flushHead()
 
-    lastName = pkg.name
-    lastVersion = pkg.version
-    lastRange = opts.devDependencies ? pkg.devDependencies[name] : pkg.dependencies[name]
+    let prefix = total++ > 0 ? ',' : ''
+
+    json.write(prefix + JSON.stringify({
+      name: pkg.name,
+      version: pkg.version,
+      range: opts.devDependencies ? pkg.devDependencies[name] : pkg.dependencies[name]
+    }) + '\n')
   }
 
   function onEnd () {
-    flush()
+    if (!headFlushed) flushHead()
     flushTail()
     console.log('results for %s@%s: %d', name, range, total)
-  }
-
-  function flush () {
-    if (!headFlushed) flushHead()
-    if (!lastName) return
-
-    let prefix = total > 0 ? ',' : ''
-
-    json.write(prefix + JSON.stringify({
-      name: lastName,
-      version: lastVersion,
-      range: lastRange
-    }) + '\n')
-
-    total++
   }
 
   function flushHead () {
