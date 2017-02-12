@@ -14,7 +14,6 @@ module.exports = (name, range, opts) => {
   let results = depDb.query(name, range, opts)
   let json = new PassThrough()
   let total = 0
-  let resultCount = 0
   let headFlushed = false
   let lastName, lastVersion, lastRange
 
@@ -32,8 +31,6 @@ module.exports = (name, range, opts) => {
   return json
 
   function onData (pkg) {
-    total++
-
     if (lastName && lastName !== pkg.name) {
       flush()
     } else if (lastVersion && semver.lt(pkg.version, lastVersion)) {
@@ -48,14 +45,14 @@ module.exports = (name, range, opts) => {
   function onEnd () {
     flush()
     flushTail()
-    console.log('query: %s@%s, results: %d, unique: %d', name, range, total, resultCount)
+    console.log('results for %s@%s: %d', name, range, total)
   }
 
   function flush () {
     if (!headFlushed) flushHead()
     if (!lastName) return
 
-    let prefix = resultCount > 0 ? ',' : ''
+    let prefix = total > 0 ? ',' : ''
 
     json.write(prefix + JSON.stringify({
       name: lastName,
@@ -63,25 +60,19 @@ module.exports = (name, range, opts) => {
       range: lastRange
     }) + '\n')
 
-    resultCount++
+    total++
   }
 
   function flushHead () {
     headFlushed = true
     json.write(`{
       "query": {"name":"${name}","range":"${range}"},
-      "results": {
-        "unique_packages": [
+      "results": [
     `)
   }
 
   function flushTail () {
-    json.end(`
-        ],
-        "total_packages_count": ${total},
-        "unique_packages_count": ${resultCount}
-      }
-    }`)
+    json.end(']}')
   }
 
   function flushError (err) {
@@ -91,9 +82,7 @@ module.exports = (name, range, opts) => {
     opbeat.captureError(err)
 
     if (headFlushed) {
-      json.end(`
-          ]
-        },
+      json.end(`],
         "error": true,
         "message": "${err.message}"
       }`)

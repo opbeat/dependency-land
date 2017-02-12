@@ -9,9 +9,7 @@ import SearchInfo from '../SearchInfo'
 import './style.css'
 
 const resetState = {
-  totalPackagesCount: null,
-  uniquePackagesCount: null,
-  uniquePackages: null,
+  results: null,
   isLoading: false,
   errorMessage: ''
 }
@@ -127,9 +125,7 @@ const PackageSearch = React.createClass({
         this.setState(errorState)
       } else {
         this.setState({
-          totalPackagesCount: result.results.total_packages_count,
-          uniquePackagesCount: result.results.unique_packages_count,
-          uniquePackages: result.results.unique_packages,
+          results: result.results,
           queryName: result.query.name,
           isLoading: false
         })
@@ -314,7 +310,7 @@ const PackageSearch = React.createClass({
 
 function SearchResults (props) {
   const {
-    uniquePackages,
+    results,
     searchValueForName,
     searchValueForRange,
     errorMessage
@@ -332,7 +328,7 @@ function SearchResults (props) {
     )
   }
 
-  if (uniquePackages === null) {
+  if (results === null) {
     return (
       <Message>
         Search for { searchValueForName || 'a package' }
@@ -341,7 +337,7 @@ function SearchResults (props) {
     )
   }
 
-  if (uniquePackages.length === 0) {
+  if (results.length === 0) {
     return (
       <Message>
           No results found
@@ -351,7 +347,7 @@ function SearchResults (props) {
 
   return (
     <div>
-      {uniquePackages.length > 0 ? <SearchResultsModules {...props} /> : null}
+      {results.length > 0 ? <SearchResultsModules {...props} /> : null}
     </div>
   )
 }
@@ -363,8 +359,8 @@ const Message = ({ children }) => (
   </h2>
 )
 
-function SearchResultsCount ({ totalCount, uniqueCount }) {
-  if (!totalCount && !uniqueCount) {
+function SearchResultsCount ({ results }) {
+  if (!results) {
     return (
       <p>
         { ' '.replace(/ /g, '\u00a0') }
@@ -373,8 +369,7 @@ function SearchResultsCount ({ totalCount, uniqueCount }) {
   } else {
     return (
       <p>
-        Found <b>{totalCount}</b> dependent package releases.
-        Filtered down to <b>{uniqueCount}</b> unique packages:
+        Found <b>{results}</b> dependents:
       </p>
     )
   }
@@ -389,17 +384,14 @@ class SearchResultsModules extends React.Component {
 
   render () {
     const {
-      totalPackagesCount,
-      uniquePackagesCount,
-      uniquePackages,
+      results,
       queryName
     } = this.props
 
     return (
       <div>
         <SearchResultsCount
-          totalCount={totalPackagesCount}
-          uniqueCount={uniquePackagesCount}
+          results={results.length}
         />
         <table className='ui selectable structured large table'>
           <thead className='left'>
@@ -411,7 +403,7 @@ class SearchResultsModules extends React.Component {
           </thead>
           <tbody>
             {
-              uniquePackages.map((_package, idx) => (
+              results.map((_package, idx) => (
                 <tr key={idx}>
                   <td>
                     <a
