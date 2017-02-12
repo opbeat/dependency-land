@@ -127,7 +127,7 @@ const PackageSearch = React.createClass({
         this.setState(errorState)
       } else {
         this.setState({
-          results: result.results,
+          results: result,
           queryName: _name,
           isLoading: false
         })
