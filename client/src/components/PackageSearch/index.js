@@ -116,6 +116,8 @@ const PackageSearch = React.createClass({
       isLoading: true
     })
 
+    let _name = name
+
     Client.search(name, range, dev, (result) => {
       if (result.error) {
         let errorState = Object.assign({}, resetState, {
@@ -126,7 +128,7 @@ const PackageSearch = React.createClass({
       } else {
         this.setState({
           results: result.results,
-          queryName: result.query.name,
+          queryName: _name,
           isLoading: false
         })
       }
