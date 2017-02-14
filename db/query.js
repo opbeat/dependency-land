@@ -48,10 +48,7 @@ module.exports = (name, range, opts) => {
 
   function flushHead () {
     headFlushed = true
-    json.write(`{
-      "query": {"name":"${name}","range":"${range}"},
-      "results": [
-    `)
+    json.write('{"results":[')
   }
 
   function flushTail () {
