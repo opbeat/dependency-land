@@ -1,4 +1,3 @@
-const semver = require('semver')
 const DepDb = require('dependency-db')
 const sub = require('subleveldown')
 const PassThrough = require('readable-stream').PassThrough
@@ -14,9 +13,7 @@ module.exports = (name, range, opts) => {
   let results = depDb.query(name, range, opts)
   let json = new PassThrough()
   let total = 0
-  let resultCount = 0
   let headFlushed = false
-  let lastName, lastVersion, lastRange
 
   if (!name) {
     flushError(new Error('missing required name'))
@@ -32,56 +29,33 @@ module.exports = (name, range, opts) => {
   return json
 
   function onData (pkg) {
-    total++
+    if (!headFlushed) flushHead()
 
-    if (lastName && lastName !== pkg.name) {
-      flush()
-    } else if (lastVersion && semver.lt(pkg.version, lastVersion)) {
-      return
-    }
+    let prefix = total++ > 0 ? ',' : ''
 
-    lastName = pkg.name
-    lastVersion = pkg.version
-    lastRange = opts.devDependencies ? pkg.devDependencies[name] : pkg.dependencies[name]
+    json.write(prefix + JSON.stringify({
+      name: pkg.name,
+      version: pkg.version,
+      range: opts.devDependencies ? pkg.devDependencies[name] : pkg.dependencies[name]
+    }) + '\n')
   }
 
   function onEnd () {
-    flush()
-    flushTail()
-    console.log('query: %s@%s, results: %d, unique: %d', name, range, total, resultCount)
-  }
-
-  function flush () {
     if (!headFlushed) flushHead()
-    if (!lastName) return
-
-    let prefix = resultCount > 0 ? ',' : ''
-
-    json.write(prefix + JSON.stringify({
-      name: lastName,
-      version: lastVersion,
-      range: lastRange
-    }) + '\n')
-
-    resultCount++
+    flushTail()
+    console.log('results for %s@%s: %d', name, range, total)
   }
 
   function flushHead () {
     headFlushed = true
     json.write(`{
       "query": {"name":"${name}","range":"${range}"},
-      "results": {
-        "unique_packages": [
+      "results": [
     `)
   }
 
   function flushTail () {
-    json.end(`
-        ],
-        "total_packages_count": ${total},
-        "unique_packages_count": ${resultCount}
-      }
-    }`)
+    json.end(']}')
   }
 
   function flushError (err) {
@@ -91,9 +65,7 @@ module.exports = (name, range, opts) => {
     opbeat.captureError(err)
 
     if (headFlushed) {
-      json.end(`
-          ]
-        },
+      json.end(`],
         "error": true,
         "message": "${err.message}"
       }`)
