@@ -216,7 +216,7 @@ const PackageSearch = React.createClass({
       <div className='PackageSearch'>
         <SearchInfo />
 
-        <div className='ui two column grid SearchForm'>
+        <div className='ui two column doubling grid SearchForm'>
           <form onSubmit={this.onSubmit} className='ui four column centered row'>
 
             <div className='ui six wide column'>

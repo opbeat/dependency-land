@@ -3,6 +3,21 @@
     font-size: 1.1em;
 }
 
-a code {
+.SearchInfo a {
+    margin-right: 17px;
+    display: inline-block;
+}
+
+@media only screen and (max-width: 768px) {
+    .SearchInfo a {
+        margin-right: 35px;
+    }
+}
+
+.SearchInfo a code {
     color: #00b5ad;
+}
+
+.SearchInfo p {
+    margin-bottom: 0;
 }

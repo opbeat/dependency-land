@@ -7,15 +7,26 @@
 }
 
 .SearchInputName input {
-    width: 300px;
+    width: 100%;
 }
 
 .SearchInputRange input {
     width: 125px;
 }
 
+@media only screen and (max-width: 1200px) {
+    .SearchInputName input {
+        width: 80%;
+    }
+}
 
-@media only screen and (max-width: 767px) {
+@media only screen and (max-width: 1024px) {
+    .SearchInputName input {
+        width: 100%;
+    }
+}
+
+@media only screen and (max-width: 1200px) {
     .PackageSearch .ui.button {
         margin: 20px 0 0 0;
     }
