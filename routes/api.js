@@ -51,7 +51,12 @@ const apiHandler = (request, reply) => {
     }
 
     // Run db query
-    var stream = query(packageName, versionRange, {devDependencies: request.query.dev})
+    var opts = {
+      devDependencies: request.query.dev,
+      gt: request.query.gt,
+      limit: request.query.limit
+    }
+    var stream = query(packageName, versionRange, opts)
 
     eos(stream, function (err) {
       if (trace) trace.end()
