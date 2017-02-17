@@ -58,7 +58,6 @@ const apiHandler = (request, reply) => {
       if (err) opbeat.captureError(err)
     })
 
-    var res = reply(stream)
-    res.header('Content-Type', 'application/json')
+    reply(stream).header('Content-Type', 'application/json')
   }
 }
