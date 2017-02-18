@@ -11,8 +11,11 @@ import './style.css'
 const resetState = {
   results: null,
   isLoading: false,
-  errorMessage: ''
+  errorMessage: '',
+  lastPackage: ''
 }
+
+const resultsLimit = 10
 
 const PackageSearch = React.createClass({
   getResetState (name, range, dev) {
@@ -94,10 +97,7 @@ const PackageSearch = React.createClass({
     })
   },
 
-  runSearch (
-    name = this.state.searchValueForName,
-    range = this.state.searchValueForRange,
-    dev = this.state.searchDev
+  runSearch(name = this.state.searchValueForName , range = this.state.searchValueForRange , lastPackage = this.state.lastPackage , dev = this.state.searchDev
   ) {
     if (name === '') {
       return false
@@ -118,7 +118,7 @@ const PackageSearch = React.createClass({
 
     let _name = name
 
-    Client.search(name, range, dev, (result) => {
+    Client.search(name, range, dev, resultsLimit, lastPackage, (result) => {
       if (result.error) {
         let errorState = Object.assign({}, resetState, {
           errorMessage: result.message
@@ -129,13 +129,14 @@ const PackageSearch = React.createClass({
         this.setState({
           results: result,
           queryName: _name,
-          isLoading: false
+          isLoading: false,
+          lastPackage: result[result.length - 1].name
         })
       }
     })
   },
 
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps(nextProps) {
     // Run search if new params are different from current ones
     let packageParam = nextProps.params.package
     let versionParam = nextProps.params.version
@@ -201,7 +202,11 @@ const PackageSearch = React.createClass({
     )
   },
 
-  render () {
+  loadMore() {
+    this.runSearch()
+  },
+
+  render() {
     const { searchValueForName, searchValueForRange } = this.state
     const showClearIconForName = searchValueForName.length > 0
     const showClearIconForRange = searchValueForRange.length > 0
@@ -380,7 +385,7 @@ function SearchResultsCount ({ results }) {
 class SearchResultsModules extends React.Component {
   shouldComponentUpdate (nextProps) {
     return (
-      nextProps.queryName !== this.props.queryName
+      nextProps.queryName !== this.props.queryName || nextProps.lastPackage !== this.props.lastPackage
     )
   }
 

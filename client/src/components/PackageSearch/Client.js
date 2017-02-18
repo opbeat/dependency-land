@@ -1,10 +1,26 @@
 import fetch from 'isomorphic-fetch'
 
-function search (query, range, dev, cb) {
+function serialize (obj) {
+  var str = []
+  for (var p in obj) {
+    if (obj.hasOwnProperty(p)) {
+      str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]))
+    }
+  }
+  return str.join('&')
+}
+
+function search (query, range, dev, limit, gt, cb) {
   query = encodeURIComponent(query)
   range = encodeURIComponent(range)
 
-  return fetch(`/api/query/${query}${range ? '/' : ''}${range}${dev ? '?dev=1' : ''}`, {
+  const options = Object.assign({}, { limit: -1 }, {limit, gt})
+
+  if (dev) {
+    options.dev = 1
+  }
+
+  return fetch(`/api/query/${query}${range ? '/' : ''}${range}?${serialize(options)}`, {
     accept: 'application/json'
   }).then(checkStatus)
     .then(parseJSON)
