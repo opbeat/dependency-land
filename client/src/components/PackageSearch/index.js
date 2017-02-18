@@ -309,6 +309,17 @@ const PackageSearch = React.createClass({
             </div>
           ) : null}
           <SearchResults {...this.state} />
+          {this.state.results && this.state.results.length >= 10 &&
+            <div className='ui container ResultsPagination'>
+            <button
+              type='submit'
+              className='ui column large teal button'
+              onClick={this.loadMore}
+            >
+              Load more
+              </button>
+            </div>
+          }
         </div>
       </div>
     )
