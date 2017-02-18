@@ -97,7 +97,11 @@ const PackageSearch = React.createClass({
     })
   },
 
-  runSearch(name = this.state.searchValueForName , range = this.state.searchValueForRange , lastPackage = this.state.lastPackage , dev = this.state.searchDev
+  runSearch (
+    name = this.state.searchValueForName,
+    range = this.state.searchValueForRange,
+    dev = this.state.searchDev,
+    lastPackage = this.state.lastPackage
   ) {
     if (name === '') {
       return false
@@ -127,16 +131,20 @@ const PackageSearch = React.createClass({
         this.setState(errorState)
       } else {
         this.setState({
-          results: result,
+          results: lastPackage ? this.state.results.concat(result) : result,
           queryName: _name,
           isLoading: false,
-          lastPackage: result[result.length - 1].name
-        })
+          lastPackage: result.length === resultsLimit ? result[result.length - 1].name : ''
+        }, () => this.scrollToBottom())
       }
     })
   },
 
-  componentWillReceiveProps(nextProps) {
+  scrollToBottom () {
+    window.scrollTo(0, document.body.scrollHeight)
+  },
+
+  componentWillReceiveProps (nextProps) {
     // Run search if new params are different from current ones
     let packageParam = nextProps.params.package
     let versionParam = nextProps.params.version
@@ -202,11 +210,11 @@ const PackageSearch = React.createClass({
     )
   },
 
-  loadMore() {
+  loadMore () {
     this.runSearch()
   },
 
-  render() {
+  render () {
     const { searchValueForName, searchValueForRange } = this.state
     const showClearIconForName = searchValueForName.length > 0
     const showClearIconForRange = searchValueForRange.length > 0
@@ -309,14 +317,14 @@ const PackageSearch = React.createClass({
             </div>
           ) : null}
           <SearchResults {...this.state} />
-          {this.state.results && this.state.results.length >= 10 &&
+          {this.state.lastPackage &&
             <div className='ui container ResultsPagination'>
-            <button
-              type='submit'
-              className='ui column large teal button'
-              onClick={this.loadMore}
-            >
-              Load more
+              <button
+                type='submit'
+                className='ui column large teal button'
+                onClick={this.loadMore}
+              >
+                Load more
               </button>
             </div>
           }
