@@ -1,10 +1,10 @@
 import fetch from 'isomorphic-fetch'
 
 function serialize (obj) {
-  var str = []
-  for (var p in obj) {
-    if (obj.hasOwnProperty(p)) {
-      str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]))
+  let str = []
+  for (let property in obj) {
+    if (obj.hasOwnProperty(property)) {
+      str.push(encodeURIComponent(property) + '=' + encodeURIComponent(obj[property]))
     }
   }
   return str.join('&')
