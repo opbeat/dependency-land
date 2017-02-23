@@ -16,7 +16,7 @@ const resetState = {
   lastPackage: ''
 }
 
-const resultsLimit = 10
+const resultsLimit = 50
 
 const PackageSearch = React.createClass({
   getResetState (name, range, dev) {
