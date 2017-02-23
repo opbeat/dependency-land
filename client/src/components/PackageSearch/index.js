@@ -11,6 +11,7 @@ import './style.css'
 const resetState = {
   results: null,
   isLoading: false,
+  isLoadingMore: false,
   errorMessage: '',
   lastPackage: ''
 }
@@ -135,13 +136,56 @@ const PackageSearch = React.createClass({
           queryName: _name,
           isLoading: false,
           lastPackage: result.length === resultsLimit ? result[result.length - 1].name : ''
-        }, () => this.scrollToBottom())
+        })
       }
     })
   },
 
-  scrollToBottom () {
-    window.scrollTo(0, document.body.scrollHeight)
+  runSearchForMore (
+    name = this.state.searchValueForName,
+    range = this.state.searchValueForRange,
+    dev = this.state.searchDev,
+    lastPackage = this.state.lastPackage
+  ) {
+    if (name === '') {
+      return false
+    }
+
+    if (range === '') {
+      this.setState({
+        searchValueForRange: '*'
+      })
+    }
+
+    dev = Boolean(dev)
+
+    this.setState({
+      errorMessage: '',
+      isLoadingMore: true
+    })
+
+    let _name = name
+
+    Client.search(name, range, dev, resultsLimit, lastPackage, (result) => {
+      if (result.error) {
+        let errorState = Object.assign({}, resetState, {
+          errorMessage: result.message
+        })
+
+        this.setState(errorState)
+      } else {
+        this.setState({
+          results: lastPackage ? this.state.results.concat(result) : result,
+          queryName: _name,
+          isLoadingMore: false,
+          lastPackage: result.length === resultsLimit ? result[result.length - 1].name : ''
+        })
+      }
+    })
+  },
+
+  loadMore () {
+    this.runSearchForMore()
   },
 
   componentWillReceiveProps (nextProps) {
@@ -155,6 +199,26 @@ const PackageSearch = React.createClass({
     this.setState(newState, () => {
       this.runSearch(packageParam, versionParam, devParam)
     })
+  },
+
+  componentDidMount () {
+    window.addEventListener('scroll', this.handleScroll)
+  },
+
+  componentWillUnmount () {
+    window.removeEventListener('scroll', this.handleScroll)
+  },
+
+  handleScroll () {
+    // @see http://stackoverflow.com/a/22394544/1955940
+    const scrollTop = (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop
+    const scrollHeight = (document.documentElement && document.documentElement.scrollHeight) || document.body.scrollHeight
+
+    if ((scrollTop + window.innerHeight) >= scrollHeight) {
+      if (this.state.lastPackage) {
+        this.loadMore()
+      }
+    }
   },
 
   componentWillMount () {
@@ -208,10 +272,6 @@ const PackageSearch = React.createClass({
       this.state.searchValueForRange,
       this.state.searchDev
     )
-  },
-
-  loadMore () {
-    this.runSearch()
   },
 
   render () {
@@ -306,13 +366,13 @@ const PackageSearch = React.createClass({
 
         <div className='ui hidden divider' />
         <div className='ui container ResultsContainer'>
-          { this.state.isLoading ? (
+          {this.state.isLoading ? (
             <div className='ui active inverted dimmer'>
               <div className='ui medium text loader'>
                 <b>Loading</b>
                 <p>
                   Searching for popular modules may take a while.
-                </p>
+                  </p>
               </div>
             </div>
           ) : null}
@@ -321,10 +381,11 @@ const PackageSearch = React.createClass({
             <div className='ui container ResultsPagination'>
               <button
                 type='submit'
-                className='ui column large teal button'
+                className={`ui column large teal button ${this.state.isLoadingMore ? 'disabled' : ''}`}
                 onClick={this.loadMore}
+                disabled={this.state.isLoadingMore}
               >
-                Load more
+                {this.state.isLoadingMore ? 'Loading...' : 'Load more'}
               </button>
             </div>
           }
