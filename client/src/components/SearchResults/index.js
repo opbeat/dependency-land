@@ -61,7 +61,7 @@ function SearchResultsCount ({ results }) {
   } else {
     return (
       <p>
-        Found <b>{results}</b> dependents:
+        Found <b>{results}</b> dependents.
       </p>
     )
   }
@@ -70,7 +70,7 @@ function SearchResultsCount ({ results }) {
 class SearchResultsModules extends React.Component {
   shouldComponentUpdate (nextProps) {
     return (
-      nextProps.queryName !== this.props.queryName
+      nextProps.queryName !== this.props.queryName || this.props.results.length < nextProps.results.length
     )
   }
 
@@ -82,9 +82,6 @@ class SearchResultsModules extends React.Component {
 
     return (
       <div>
-        <SearchResultsCount
-          results={results.length}
-        />
         <table className='ui selectable structured large table'>
           <thead className='left'>
             <tr>
@@ -112,6 +109,9 @@ class SearchResultsModules extends React.Component {
             }
           </tbody>
         </table>
+        <SearchResultsCount
+          results={results.length}
+        />
       </div>
     )
   }

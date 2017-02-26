@@ -6,6 +6,7 @@ import classnames from 'classnames'
 
 import SearchInfo from '../SearchInfo'
 import SearchResults from '../SearchResults'
+import Waypoint from 'react-waypoint'
 
 import './style.css'
 
@@ -16,6 +17,17 @@ const resetState = {
 }
 
 const PackageSearch = React.createClass({
+
+  propTypes: {
+    limit: React.PropTypes.number
+  },
+
+  getDefaultProps () {
+    return {
+      limit: 50
+    }
+  },
+
   getResetState (name, range, dev) {
     let state = Object.assign({}, resetState, {})
 
@@ -119,6 +131,12 @@ const PackageSearch = React.createClass({
 
     let _name = name
 
+    const res = (result) => this.state.results !== null
+      ? [...this.state.results, ...result]
+        : result
+
+    const gt = (result) => result[result.length - 1] && result[result.length - 1].name
+
     Client.search(name, range, dev, (result) => {
       if (result.error) {
         let errorState = Object.assign({}, resetState, {
@@ -128,12 +146,13 @@ const PackageSearch = React.createClass({
         this.setState(errorState)
       } else {
         this.setState({
-          results: result,
+          results: res(result),
           queryName: _name,
-          isLoading: false
+          isLoading: false,
+          gt: gt(result)
         })
       }
-    })
+    })(this.props.limit, this.state.gt)
   },
 
   componentWillReceiveProps (nextProps) {
@@ -143,6 +162,8 @@ const PackageSearch = React.createClass({
     let devParam = nextProps.location.query.dev
 
     let newState = this.getResetState(packageParam, versionParam, devParam)
+
+    newState.gt = undefined
 
     this.setState(newState, () => {
       this.runSearch(packageParam, versionParam, devParam)
@@ -200,6 +221,18 @@ const PackageSearch = React.createClass({
       this.state.searchValueForRange,
       this.state.searchDev
     )
+  },
+
+  onEndOfPage (event) {
+    if (event.event == null) {
+      // waypoint is within viewport
+      return false
+    }
+
+    const resultsLength = this.state.results ? this.state.results.length : 0
+    if (resultsLength % this.props.limit === 0) {
+      this.runSearch()
+    }
   },
 
   render () {
@@ -306,6 +339,7 @@ const PackageSearch = React.createClass({
           ) : null}
           <SearchResults {...this.state} />
         </div>
+        <Waypoint onEnter={this.onEndOfPage} />
       </div>
     )
   }
