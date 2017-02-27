@@ -131,9 +131,7 @@ const PackageSearch = React.createClass({
 
     let _name = name
 
-    const res = (result) => this.state.results !== null
-      ? [...this.state.results, ...result]
-        : result
+    const res = (result) => [...(this.state.results||[]), ...result]
 
     const gt = (result) => result[result.length - 1] && result[result.length - 1].name
 
