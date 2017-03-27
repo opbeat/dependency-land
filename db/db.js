@@ -1,4 +1,4 @@
-global.utils = require('../utils.js')
+global.utils = require('../utils')
 
 const path = require('path')
 const level = require('level-party')

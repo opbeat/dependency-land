@@ -1,6 +1,6 @@
 exports.init = function (server) {
   // Route for api
-  require('./api.js')(server)
+  require('./api')(server)
 
   // Route for static client assets
   server.route({

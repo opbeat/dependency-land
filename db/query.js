@@ -4,7 +4,7 @@ const through2 = require('through2')
 const JSONStream = require('JSONStream')
 const pumpify = require('pumpify')
 
-const db = require('./db.js')
+const db = require('./db')
 const depDb = new DepDb(sub(db.depdb(), 'depdb'))
 
 module.exports = (name, range, opts) => {

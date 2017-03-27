@@ -1,5 +1,5 @@
 
-global.utils = require('./utils.js')
+global.utils = require('./utils')
 
 if (utils.isDevelopment()) {
   require('dotenv').config()

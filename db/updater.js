@@ -1,7 +1,7 @@
-global.utils = require('../utils.js')
+global.utils = require('../utils')
 
 const DbUpdater = require('npm-dependency-db/updater')
-const db = require('./db.js')
+const db = require('./db')
 
 const updater = new DbUpdater(db.depdb(), {
   npmDb: db.hypercore(),

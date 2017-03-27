@@ -4,7 +4,7 @@ const Boom = require('boom')
 const eos = require('end-of-stream')
 const semver = require('semver')
 
-const query = require('../db/query.js')
+const query = require('../db/query')
 
 // Exports = exports? Read: http://stackoverflow.com/a/7142924/5210
 module.exports = exports = (server) => {
