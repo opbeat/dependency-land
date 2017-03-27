@@ -1,3 +1,5 @@
+'use strict'
+
 const DepDb = require('dependency-db')
 const sub = require('subleveldown')
 const through2 = require('through2')

@@ -1,3 +1,5 @@
+'use strict'
+
 global.env = process.env.NODE_ENV || 'development'
 
 exports.isDevelopment = function () {

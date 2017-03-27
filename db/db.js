@@ -1,5 +1,6 @@
-global.utils = require('../utils')
+'use strict'
 
+global.utils = require('../utils')
 const path = require('path')
 const level = require('level-party')
 const mkdirp = require('mkdirp')

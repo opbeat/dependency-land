@@ -1,3 +1,5 @@
+'use strict'
+
 /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "opbeat" }] */
 const opbeat = require('opbeat').start()
 global.utils = require('./utils')

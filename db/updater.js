@@ -1,5 +1,6 @@
-global.utils = require('../utils')
+'use strict'
 
+global.utils = require('../utils')
 const DbUpdater = require('npm-dependency-db/updater')
 const db = require('./db')
 

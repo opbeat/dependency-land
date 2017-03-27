@@ -1,3 +1,5 @@
+'use strict'
+
 exports.init = function (server) {
   // Route for api
   require('./api')(server)

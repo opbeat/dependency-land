@@ -1,3 +1,5 @@
+'use strict'
+
 const opbeat = require('opbeat')
 const Joi = require('joi')
 const Boom = require('boom')
