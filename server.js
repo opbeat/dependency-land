@@ -2,7 +2,7 @@
 
 /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "opbeat" }] */
 const opbeat = require('opbeat').start()
-global.utils = require('./utils')
+const utils = require('./utils')
 
 if (utils.isDevelopment()) {
   require('dotenv').config()

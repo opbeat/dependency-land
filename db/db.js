@@ -1,9 +1,9 @@
 'use strict'
 
-global.utils = require('../utils')
 const path = require('path')
 const level = require('level-party')
 const mkdirp = require('mkdirp')
+const utils = require('../utils')
 
 // Create db path
 let pathPrefix

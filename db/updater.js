@@ -1,8 +1,8 @@
 'use strict'
 
-global.utils = require('../utils')
 const DbUpdater = require('npm-dependency-db/updater')
 const db = require('./db')
+const utils = require('../utils')
 
 const updater = new DbUpdater(db.depdb(), {
   npmDb: db.hypercore(),

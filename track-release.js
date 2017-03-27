@@ -1,6 +1,6 @@
 'use strict'
 
-global.utils = require('./utils')
+const utils = require('./utils')
 
 if (utils.isDevelopment()) {
   require('dotenv').config()
