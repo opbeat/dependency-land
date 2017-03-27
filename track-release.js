@@ -1,4 +1,3 @@
-/* global utils */
 
 global.utils = require('./utils.js')
 
