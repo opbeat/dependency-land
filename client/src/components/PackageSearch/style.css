@@ -86,3 +86,8 @@
 .SearchForm .ui.large.toggle.checkbox input:checked~label:before {
     background-color: #00b5ad!important;
 }
+
+.ResultsPagination {
+    margin-top: 25px;
+    text-align: center;
+}

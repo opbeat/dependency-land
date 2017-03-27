@@ -11,8 +11,12 @@ import './style.css'
 const resetState = {
   results: null,
   isLoading: false,
-  errorMessage: ''
+  isLoadingMore: false,
+  errorMessage: '',
+  lastPackage: ''
 }
+
+const resultsLimit = 50
 
 const PackageSearch = React.createClass({
   getResetState (name, range, dev) {
@@ -97,7 +101,8 @@ const PackageSearch = React.createClass({
   runSearch (
     name = this.state.searchValueForName,
     range = this.state.searchValueForRange,
-    dev = this.state.searchDev
+    dev = this.state.searchDev,
+    lastPackage = this.state.lastPackage
   ) {
     if (name === '') {
       return false
@@ -118,7 +123,7 @@ const PackageSearch = React.createClass({
 
     let _name = name
 
-    Client.search(name, range, dev, (result) => {
+    Client.search(name, range, dev, resultsLimit, lastPackage, (result) => {
       if (result.error) {
         let errorState = Object.assign({}, resetState, {
           errorMessage: result.message
@@ -127,12 +132,60 @@ const PackageSearch = React.createClass({
         this.setState(errorState)
       } else {
         this.setState({
-          results: result,
+          results: lastPackage ? this.state.results.concat(result) : result,
           queryName: _name,
-          isLoading: false
+          isLoading: false,
+          lastPackage: result.length === resultsLimit ? result[result.length - 1].name : ''
         })
       }
     })
+  },
+
+  runSearchForMore (
+    name = this.state.searchValueForName,
+    range = this.state.searchValueForRange,
+    dev = this.state.searchDev,
+    lastPackage = this.state.lastPackage
+  ) {
+    if (name === '') {
+      return false
+    }
+
+    if (range === '') {
+      this.setState({
+        searchValueForRange: '*'
+      })
+    }
+
+    dev = Boolean(dev)
+
+    this.setState({
+      errorMessage: '',
+      isLoadingMore: true
+    })
+
+    let _name = name
+
+    Client.search(name, range, dev, resultsLimit, lastPackage, (result) => {
+      if (result.error) {
+        let errorState = Object.assign({}, resetState, {
+          errorMessage: result.message
+        })
+
+        this.setState(errorState)
+      } else {
+        this.setState({
+          results: lastPackage ? this.state.results.concat(result) : result,
+          queryName: _name,
+          isLoadingMore: false,
+          lastPackage: result.length === resultsLimit ? result[result.length - 1].name : ''
+        })
+      }
+    })
+  },
+
+  loadMore () {
+    this.runSearchForMore()
   },
 
   componentWillReceiveProps (nextProps) {
@@ -146,6 +199,26 @@ const PackageSearch = React.createClass({
     this.setState(newState, () => {
       this.runSearch(packageParam, versionParam, devParam)
     })
+  },
+
+  componentDidMount () {
+    window.addEventListener('scroll', this.handleScroll)
+  },
+
+  componentWillUnmount () {
+    window.removeEventListener('scroll', this.handleScroll)
+  },
+
+  handleScroll () {
+    // @see http://stackoverflow.com/a/22394544/1955940
+    const scrollTop = (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop
+    const scrollHeight = (document.documentElement && document.documentElement.scrollHeight) || document.body.scrollHeight
+
+    if ((scrollTop + window.innerHeight) >= scrollHeight) {
+      if (this.state.lastPackage) {
+        this.loadMore()
+      }
+    }
   },
 
   componentWillMount () {
@@ -293,17 +366,29 @@ const PackageSearch = React.createClass({
 
         <div className='ui hidden divider' />
         <div className='ui container ResultsContainer'>
-          { this.state.isLoading ? (
+          {this.state.isLoading ? (
             <div className='ui active inverted dimmer'>
               <div className='ui medium text loader'>
                 <b>Loading</b>
                 <p>
                   Searching for popular modules may take a while.
-                </p>
+                  </p>
               </div>
             </div>
           ) : null}
           <SearchResults {...this.state} />
+          {this.state.lastPackage &&
+            <div className='ui container ResultsPagination'>
+              <button
+                type='submit'
+                className={`ui column large teal button ${this.state.isLoadingMore ? 'disabled' : ''}`}
+                onClick={this.loadMore}
+                disabled={this.state.isLoadingMore}
+              >
+                {this.state.isLoadingMore ? 'Loading...' : 'Load more'}
+              </button>
+            </div>
+          }
         </div>
       </div>
     )
@@ -380,7 +465,7 @@ function SearchResultsCount ({ results }) {
 class SearchResultsModules extends React.Component {
   shouldComponentUpdate (nextProps) {
     return (
-      nextProps.queryName !== this.props.queryName
+      nextProps.queryName !== this.props.queryName || nextProps.lastPackage !== this.props.lastPackage
     )
   }
 
