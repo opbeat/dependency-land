@@ -4,7 +4,6 @@ import classnames from 'classnames'
 import './style.css'
 
 export default class NotFound extends Component {
-
   render () {
     const { className } = this.props
     return (

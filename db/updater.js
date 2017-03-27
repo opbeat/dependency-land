@@ -18,7 +18,7 @@ updater.on('running', () => {
 })
 
 updater.on('processed', (block) => {
-    // Throttle logging a bit
+  // Throttle logging a bit
   if (block % 100 === 0) {
     utils.log(`dep-db processed npm change number ${block}`)
   }

@@ -1,7 +1,7 @@
 'use strict'
 
-/* eslint no-unused-vars: ["error", { "varsIgnorePattern": "opbeat" }] */
-const opbeat = require('opbeat').start()
+require('opbeat').start()
+
 const utils = require('./utils')
 
 if (utils.isDevelopment()) {
