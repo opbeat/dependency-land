@@ -5,7 +5,7 @@ const db = require('./db')
 const utils = require('../utils')
 
 const updater = new DbUpdater(db.depdb(), {
-  npmDb: db.hypercore(),
+  hypercorePath: db.hypercorePath,
   live: true
 })
 

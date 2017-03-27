@@ -18,13 +18,7 @@ const dbPath = path.join(pathPrefix, '.npm-dependency-db')
 
 mkdirp.sync(dbPath)
 
-exports.hypercore = () => {
-  const db = level(path.join(dbPath, 'hypercore'))
-
-  utils.log(`hypercore database loaded from: ${db.location}`)
-
-  return db
-}
+exports.hypercorePath = path.join(dbPath, 'hypercore')
 
 exports.depdb = () => {
   const db = level(path.join(dbPath, 'dependency-db'))
